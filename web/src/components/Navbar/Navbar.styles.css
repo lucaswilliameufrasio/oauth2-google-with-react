@@ -1,0 +1,13 @@
+.container {
+    padding: 10px;
+    border-bottom: 1px solid black;
+}
+
+.navigation-button {
+    text-decoration: none;
+    color: black
+}
+
+.navigation-button:hover {
+    color: rgb(82, 77, 77);
+}

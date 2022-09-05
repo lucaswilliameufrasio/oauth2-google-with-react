@@ -1,0 +1,13 @@
+.authorization-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.authorization-signing-button {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: white;
+}
