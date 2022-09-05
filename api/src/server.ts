@@ -33,14 +33,11 @@ fastify.post('/auth/google/verify', async (request, reply) => {
       idToken: request.headers.token as string,
     })
 
-    if (isDevelopmentEnv) {
-      console.log(ticket)
-    }
-
     const payload = ticket.getPayload()
     const isAnOldDate = verifyDateIsOld(convertUnixEpochToDate(payload?.exp || 0))
 
     if (isDevelopmentEnv) {
+      console.log('ticket', ticket)
       console.log('isAnOldDate', isAnOldDate)
     }
 
@@ -58,7 +55,10 @@ fastify.post('/auth/google/verify', async (request, reply) => {
 fastify.post('/auth/google', async (request: any, reply) => {
   try {
     const { tokens } = await oAuth2Client.getToken(request.body.code)
-    console.log(tokens)
+    
+    if (isDevelopmentEnv) {
+      console.log(tokens)
+    }
 
     return tokens
   } catch (error) {
