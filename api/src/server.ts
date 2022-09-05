@@ -37,8 +37,8 @@ fastify.post('/auth/google/verify', async (request, reply) => {
     const isAnOldDate = verifyDateIsOld(convertUnixEpochToDate(payload?.exp || 0))
 
     if (isDevelopmentEnv) {
-      console.log('ticket', ticket)
-      console.log('isAnOldDate', isAnOldDate)
+      fastify.log.info('ticket', ticket)
+      fastify.log.info('isAnOldDate', isAnOldDate)
     }
 
     if (isAnOldDate) {
@@ -57,7 +57,7 @@ fastify.post('/auth/google', async (request: any, reply) => {
     const { tokens } = await oAuth2Client.getToken(request.body.code)
     
     if (isDevelopmentEnv) {
-      console.log(tokens)
+      fastify.log.info(tokens)
     }
 
     return tokens
