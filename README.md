@@ -4,7 +4,7 @@
 
 ### API
 
-1. Get your Google API client ID (copied from [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google))
+1. Get your **[Google API client ID](https://console.cloud.google.com/apis/dashboard)** (copied from [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google))
 
 `Key Point: Add both http://localhost and http://localhost:<port_number> to the Authorized JavaScript origins box for local tests or development.`
 
