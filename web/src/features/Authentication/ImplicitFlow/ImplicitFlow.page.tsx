@@ -10,7 +10,7 @@ export function ImplicitFlow() {
     const isValid = await axios.post(`${env.apiUrl}/auth/google/verify`, null, {
       headers: {
         'Content-Type': 'application/json',
-        token: credentialResponse.credential || '',
+        token: credentialResponse.credential ?? '',
       },
     })
 
