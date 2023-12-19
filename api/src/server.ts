@@ -27,6 +27,34 @@ const verifyDateIsOld = (targetDate: Date, baseDate = new Date(Date.now())) => {
   return targetDate < baseDate
 }
 
+const loadGoogleProfile = async (accessToken: string): Promise<Record<string, string> | unknown> => {
+  if (!accessToken) {
+    return undefined
+  }
+
+  // {
+  //   issued_to: '936997008152-kagqv1ocamu2hv599ok9d9a055mebb2f.apps.googleusercontent.com',
+  //   audience: '936997008152-kagqv1ocamu2hv599ok9d9a055mebb2f.apps.googleusercontent.com',
+  //   user_id: '113646098390079903948',
+  //   scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid',
+  //   expires_in: 3599,
+  //   email: 'lucas.eufrasio@jcpm.com.br',
+  //   verified_email: true,
+  //   access_type: 'offline'
+  // }
+  performance.mark('profile-start');
+  const response = await fetch(`https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`)
+  performance.mark('profile-end');
+  const measureResult = performance.measure('profile', 'profile-start', 'profile-end');
+
+  console.log('measure result', measureResult)
+  
+
+  const result = await response.json()
+
+  return result
+}
+
 fastify.post('/auth/google/verify', async (request, reply) => {
   try {
     const ticket = await oAuth2Client.verifyIdToken({
@@ -60,7 +88,38 @@ fastify.post('/auth/google', async (request: any, reply) => {
       fastify.log.info(tokens)
     }
 
+    if (tokens.access_token?.length && !Array.isArray(tokens.access_token)) {
+      const profile = await loadGoogleProfile(tokens.access_token)
+
+      console.log('user profile', profile)
+    }
+
     return tokens
+  } catch (error) {
+    fastify.log.error(error)
+    return { message: 'Unexpected Error' }
+  }
+})
+
+
+fastify.get('/auth/google/profile', async (request, reply) => {
+  try {
+    const authorization = request.headers['authorization']
+    const token = authorization?.split(" ")
+
+    if (!token) {
+      return reply.status(401).send({ message: 'You shall not pass' })
+    }
+    const response = await fetch(`https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${token}`)
+    
+
+    const result = await response.json()
+
+    if (isDevelopmentEnv) {
+      fastify.log.info(result)
+    }
+
+    return result
   } catch (error) {
     fastify.log.error(error)
     return { message: 'Unexpected Error' }
